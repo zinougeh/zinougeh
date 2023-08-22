@@ -1,0 +1,4 @@
+Create a Jenkins pipeline that automates the deployment of an EC2 instance, 
+sets up MicroK8s on it, and deploys SonarQube on the MicroK8s cluster. 
+You will use Terraform for infrastructure provisioning, 
+Ansible for configuration management, Helm for deploying SonarQube, and Python for any additional scripting required.
