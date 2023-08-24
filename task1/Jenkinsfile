@@ -12,6 +12,8 @@ pipeline {
         stage('Clean workspace') {
             steps {
                 cleanWs()
+                sh 'git clone https://github.com/Shanawar99/zinougeh.git'
+
             }
         }
 
