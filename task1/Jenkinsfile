@@ -20,7 +20,7 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 // Run Terraform commands
-                dir('terraform')
+                dir('zinougeh/task1/terraform')
                 {
                     sh 'terraform init'
                     sh 'terraform apply -auto-approve'
