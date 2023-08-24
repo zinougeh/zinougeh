@@ -18,7 +18,7 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 // Run Terraform commands
-                dir('$WORKSPACE/terraform')
+                dir('terraform')
                 {
                     sh 'terraform init'
                     sh 'terraform apply -auto-approve'
