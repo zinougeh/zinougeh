@@ -18,7 +18,7 @@ pipeline {
                 // Install Terraform
                 sh 'curl -O https://releases.hashicorp.com/terraform/0.15.5/terraform_0.15.5_linux_amd64.zip'
                 sh 'unzip terraform_0.15.5_linux_amd64.zip'
-                sh 'sudo mv terraform /usr/local/bin/'
+                sh 'mv terraform /usr/local/bin/'
                 sh 'rm terraform_0.15.5_linux_amd64.zip'
             }
         }
