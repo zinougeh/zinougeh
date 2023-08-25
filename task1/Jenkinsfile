@@ -36,7 +36,7 @@ pipeline {
         
         stage('Ansible to Install MicroK8s') {
             steps {
-                dir('zinougeh/task1/microk8s') {
+                dir('zinougeh/task1/microk8s/') {
                     script {
                         env.EC2_PUBLIC_IP="3.89.133.152"
                         def inventoryFile = """
@@ -47,6 +47,7 @@ pipeline {
                         writeFile file: 'temp_inventory.ini', text: inventoryFile
 
                         sh 'cat temp_inventory.ini'
+                        sh 'ls'
 
                         ansiblePlaybook(
                             inventory: 'temp_inventory.ini',
