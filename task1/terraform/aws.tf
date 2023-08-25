@@ -3,8 +3,8 @@ provider "aws" {
 }
 
 resource "aws_instance" "ec2_instance" {
-  ami           = "ami-0453898e98046c639"  # Amazon Linux 2 AMI ID for us-west-2
-  instance_type = "t2.micro"
+  ami           = "ami-0261755bbcb8c4a84"  # Ubuntu
+  instance_type = "t2.medium"
   associate_public_ip_address = true
   tags = {
     Name = "EC2_INSTANCE_BY_JENKINS"

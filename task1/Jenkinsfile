@@ -17,42 +17,43 @@ pipeline {
             }
         }
 
-        stage('Terraform Apply') {
+        stage('Terraform to Spin New EC2 server') {
             steps {
                 // Run Terraform commands
                 dir('zinougeh/task1/terraform')
                 {
                     sh 'terraform init'
                     sh 'terraform apply -auto-approve'
-                    sleep time: 400, unit: 'SECONDS'
+                    sleep time: 200, unit: 'SECONDS'
+                    script {
+                        def EC2_PUBLIC_IP = sh(script: 'terraform output public_ip', returnStdout: true).trim()
+                        env.EC2_PUBLIC_IP = EC2_PUBLIC_IP
+                        println(EC2_PUBLIC_IP)
+                    }
                 }
             }
         }
         
-        stage('Retrieve EC2 Public IP') {
+        stage('Ansible to Install MicroK8s') {
             steps {
-                script {
-                    def publicIp = sh(script: 'terraform output public_ip', returnStdout: true).trim()
-                    env.EC2_PUBLIC_IP = publicIp
-                    println(publicIp)
-                }
-            }
-        }
-        stage('MicroK8s installation') {
-            steps {
-                script {
-                    def sshKey = credentials('jenkins-key')
-                    // Copy script to remote instance using scp
-                    sh '''
-                        scp -o StrictHostKeyChecking=no -i ${sshKey} task1/microk8s/install_microk8s.sh ubuntu@${env.EC2_PUBLIC_IP}:~/install_microk8s.sh
-                    '''                    
-                    // SSH into the remote instance and execute the script
-                    sh '''
-                        ssh -o StrictHostKeyChecking=no -i ${sshKey} ubuntu@${env.EC2_PUBLIC_IP} 'sudo chmod +x ~/install_microk8s.sh && sudo ./install_microk8s.sh'
-                    '''
-                }
-            }
-        }
+                dir('zinougeh/task1/microk8s')
+                    script {
+                        def inventoryFile = """
+                            [target_host]
+                            ${env.EC2_PUBLIC_IP}
+                        """
 
+                        writeFile file: 'temp_inventory.ini', text: inventoryFile
+
+                        sh 'cat temp_inventory.ini'
+
+                        ansiblePlaybook(
+                            inventory: 'temp_inventory.ini',
+                            playbook: 'ansible.yml',
+                            hostKeyChecking: false
+                        )
+                    }
+            }
+        }
     }
 }
