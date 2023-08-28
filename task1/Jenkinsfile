@@ -78,6 +78,7 @@ pipeline {
                     // // sshCommand remote: remote, command: "sudo microk8s helm install sonar /tmp/sonarqube && sudo microk8s helm ls"
                     // }   
                     // def sshKeyCredential = credentials('jenkins')
+                    env.EC2_PUBLIC_IP="54.211.110.252"
                     sshagent(credentials: ['jenkins']) {
                         sh "scp -o StrictHostKeyChecking=no -i ${sshKeyCredential.privateKey}  -r sonarqube ${sshKeyCredential.username}@${env.EC2_PUBLIC_IP}:/tmp"
                         sh "ssh -o StrictHostKeyChecking=no -i ${sshKeyCredential.privateKey} ${sshKeyCredential.username}@${env.EC2_PUBLIC_IP} 'sudo microk8s helm install sonar /tmp/sonarqube && sudo microk8s helm ls'"
