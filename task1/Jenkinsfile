@@ -64,10 +64,11 @@ pipeline {
                 dir('zinougeh/task1/sonar/'){
                     script {
                     def sshCredentialId = 'jenkins-key'
+                    withCredentials([sshUserPrivateKey(credentialsId: 'jenkins', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
 
                     // Copy script to remote machine using SSH
                     sshCommand remote: [
-                        identityFile: sshCredentialId,
+                        identityFile: identity,
                         name: 'ubuntu',
                         user: 'ubuntu',
                         allowAnyHosts: 'true',
@@ -76,13 +77,14 @@ pipeline {
 
                     // Execute the script on the remote machine
                     sshCommand remote: [
-                        identityFile: sshCredentialId,
+                        identityFile: identity,
                         name: 'ubuntu',
                         user: 'ubuntu',
                         allowAnyHosts: 'true',
                         host: env.EC2_PUBLIC_IP
                     ], command: "sudo microk8s helm install sonar /tmp/sonarqube && sudo microk8s helm ls"
                     }
+                }
                 }
             }
         }
