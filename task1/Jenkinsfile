@@ -63,11 +63,11 @@ pipeline {
             steps {
                 dir('zinougeh/task1/sonar/'){
                     script {
-                    def sshCredentialId = 'jenkins'
+                    def sshCredentialId = 'jenkins-key'
 
                     // Copy script to remote machine using SSH
                     sshCommand remote: [
-                        credentialsId: sshCredentialId,
+                        identityFile: sshCredentialId,
                         name: 'ubuntu',
                         user: 'ubuntu',
                         allowAnyHosts: 'true',
@@ -76,7 +76,7 @@ pipeline {
 
                     // Execute the script on the remote machine
                     sshCommand remote: [
-                        credentialsId: sshCredentialId,
+                        identityFile: sshCredentialId,
                         name: 'ubuntu',
                         user: 'ubuntu',
                         allowAnyHosts: 'true',
