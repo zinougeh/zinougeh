@@ -3,23 +3,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "sonarqube.fullname" . }}
+  name: sonar-deploy
   labels:
-    {{- include "sonarqube.labels" . | nindent 4 }}
+    app: sonar
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.sonarqube.replicaCount }}
   selector:
     matchLabels:
-      {{- include "sonarqube.selectorLabels" . | nindent 6 }}
+      app: sonar
   template:
     metadata:
       labels:
-        {{- include "sonarqube.selectorLabels" . | nindent 8 }}
+        app: sonar
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.sonarqube.image.repository }}:{{ .Values.sonarqube.image.tag }}"
           imagePullPolicy: {{ .Values.sonarqube.image.pullPolicy }}
           ports:
