@@ -66,25 +66,16 @@ pipeline {
                     script {
                     def sshCredentialId = 'jenkins-key'
                     withCredentials([sshUserPrivateKey(credentialsId: 'jenkins', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
+                    def remote = [:]
+                    remote.name = "ubuntu"
+                    remote.user = "ubuntu"
+                    remote.host = env.EC2_PUBLIC_IP
+                    remote.allowAnyHosts = true
 
-                    // Copy script to remote machine using SSH
-                    sshPut remote: [
-                        identityFile: identity,
-                        name: 'ubuntu',
-                        user: 'ubuntu',
-                        allowAnyHosts: 'true',
-                        host: env.EC2_PUBLIC_IP
-                    ], from: 'sonarqube', into: '/tmp'
-                    }
-                    withCredentials([sshUserPrivateKey(credentialsId: 'jenkins', keyFileVariable: 'identity1', passphraseVariable: '', usernameVariable: 'userName')]) {
-                    sshCommand remote: [
-                        identityFile: identity1,
-                        name: 'ubuntu-machine',
-                        user: 'ubuntu',
-                        allowAnyHosts: 'true',
-                        host: env.EC2_PUBLIC_IP
-                    ], command: "sudo microk8s helm install sonar /tmp/sonarqube && sudo microk8s helm ls"
-                    }
+                    // Copy script to remote machine using SSH and run helm charts
+                    sshPut remote: remote, from: 'sonarqube', into: '/tmp'
+                    sshCommand remote: remote, command: "sudo microk8s helm install sonar /tmp/sonarqube && sudo microk8s helm ls"
+                    }   
                 }
                 }
             }
