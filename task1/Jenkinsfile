@@ -17,22 +17,22 @@ pipeline {
             }
         }
 
-        stage('Terraform to Spin New EC2 server') {
-            steps {
-                // Run Terraform commands
-                dir('zinougeh/task1/terraform')
-                {
-                    sh 'terraform init'
-                    sh 'terraform apply -auto-approve'
-                    sleep time: 200, unit: 'SECONDS'
-                    script {
-                        def EC2_PUBLIC_IP = sh(script: 'terraform output public_ip', returnStdout: true).trim()
-                        env.EC2_PUBLIC_IP = EC2_PUBLIC_IP
-                        println(EC2_PUBLIC_IP)
-                    }
-                }
-            }
-        }
+        // stage('Terraform to Spin New EC2 server') {
+        //     steps {
+        //         // Run Terraform commands
+        //         dir('zinougeh/task1/terraform')
+        //         {
+        //             sh 'terraform init'
+        //             sh 'terraform apply -auto-approve'
+        //             sleep time: 200, unit: 'SECONDS'
+        //             script {
+        //                 def EC2_PUBLIC_IP = sh(script: 'terraform output public_ip', returnStdout: true).trim()
+        //                 env.EC2_PUBLIC_IP = EC2_PUBLIC_IP
+        //                 println(EC2_PUBLIC_IP)
+        //             }
+        //         }
+        //     }
+        // }
         
         stage('Ansible to Install MicroK8s') {
             steps {
