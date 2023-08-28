@@ -22,8 +22,8 @@
         # sudo microk8s config > config
 
         # Alias kubectl to microk8s.kubectl
-        echo "alias kubectl='microk8s kubectl'" >> ~/.bashrc
-        source ~/.bashrc
+        # echo "alias kubectl='microk8s kubectl'" >> ~/.bashrc
+        # source ~/.bashrc
 
         # # Print status
         # microk8s.status
