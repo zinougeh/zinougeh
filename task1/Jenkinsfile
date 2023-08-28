@@ -73,7 +73,7 @@ pipeline {
                         user: 'ubuntu',
                         allowAnyHosts: 'true',
                         host: env.EC2_PUBLIC_IP
-                    ], command: "scp -r sonarqube ubuntu@${EC2_PUBLIC_IP}:/tmp"
+                    ], command: "scp  sonarqube ubuntu@${EC2_PUBLIC_IP}:/tmp"
 
                     // Execute the script on the remote machine
                     sshCommand remote: [
