@@ -5,11 +5,7 @@
 
   tasks:
     - name: Run the Bash script
-      script:
-        # MicroK8s Installation
-        |
-        #!/bin/bash
-
+      shell: |
         # Install microk8s
         sudo snap install microk8s --classic
 
