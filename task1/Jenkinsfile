@@ -17,67 +17,53 @@ pipeline {
             }
         }
 
-    //     stage('Terraform to Spin New EC2 server') {
-    //         steps {
-    //             // Run Terraform commands
-    //             dir('zinougeh/task1/terraform')
-    //             {
-    //                 sh 'terraform init'
-    //                 sh 'terraform apply -auto-approve'
-    //                 sleep time: 200, unit: 'SECONDS'
-    //                 script {
-    //                     def EC2_PUBLIC_IP = sh(script: 'terraform output public_ip', returnStdout: true).trim()
-    //                     env.EC2_PUBLIC_IP = EC2_PUBLIC_IP
-    //                     println(EC2_PUBLIC_IP)
-    //                 }
-    //             }
-    //         }
-    //     }
+        stage('Terraform to Spin New EC2 server') {
+            steps {
+                // Run Terraform commands
+                dir('zinougeh/task1/terraform')
+                {
+                    sh 'terraform init'
+                    sh 'terraform apply -auto-approve'
+                    sleep time: 200, unit: 'SECONDS'
+                    script {
+                        def EC2_PUBLIC_IP = sh(script: 'terraform output public_ip', returnStdout: true).trim()
+                        env.EC2_PUBLIC_IP = EC2_PUBLIC_IP
+                        println(EC2_PUBLIC_IP)
+                    }
+                }
+            }
+        }
         
-    //     stage('Ansible to Install MicroK8s') {
-    //         steps {
-    //             dir('zinougeh/task1/microk8s/') {
-    //                 script {
-    //                     // env.EC2_PUBLIC_IP="100.25.146.217"
-    //                     def inventoryFile = """
-    //                         [EC2]
-    //                         ${env.EC2_PUBLIC_IP}
-    //                     """
+        stage('Ansible to Install MicroK8s') {
+            steps {
+                dir('zinougeh/task1/microk8s/') {
+                    script {
+                        // env.EC2_PUBLIC_IP="100.25.146.217"
+                        def inventoryFile = """
+                            [EC2]
+                            ${env.EC2_PUBLIC_IP}
+                        """
 
-    //                     writeFile file: 'temp_inventory.ini', text: inventoryFile
+                        writeFile file: 'temp_inventory.ini', text: inventoryFile
 
-    //                     sh 'cat temp_inventory.ini'
-    //                     sh 'ls'
-    //                     sh 'export ANSIBLE_HOST_KEY_CHECKING=False'
-    //                     ansiblePlaybook(
-    //                         credentialsId: 'jenkins',
-    //                         inventory: 'temp_inventory.ini',
-    //                         playbook: 'ansible.yml',
-    //                         hostKeyChecking: 'false'
-    //                     )
-    //                 }
-    //         }
-    //     }
-    // }
+                        sh 'cat temp_inventory.ini'
+                        sh 'ls'
+                        sh 'export ANSIBLE_HOST_KEY_CHECKING=False'
+                        ansiblePlaybook(
+                            credentialsId: 'jenkins',
+                            inventory: 'temp_inventory.ini',
+                            playbook: 'ansible.yml',
+                            hostKeyChecking: 'false'
+                        )
+                    }
+            }
+        }
+    }
         stage('SonarQube Helm') {
             steps {
                 dir('zinougeh/task1/sonar/'){
-                    // sleep time: 60, unit: 'SECONDS'
+                    sleep time: 60, unit: 'SECONDS'
                     script {
-                    // def sshCredentialId = 'jenkins-key'
-                    // withCredentials([sshUserPrivateKey(credentialsId: 'jenkins', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
-                    // def remote = [:]
-                    // remote.name = "ubuntu"
-                    // remote.user = "ubuntu"
-                    // remote.host = env.EC2_PUBLIC_IP
-                    // remote.allowAnyHosts = true
-
-                    // // Copy script to remote machine using SSH and run helm charts
-                    // sshPut remote: remote, from: 'sonarqube', into: '/tmp'
-                    // sleep time: 30, unit: 'SECONDS'
-                    // // sshCommand remote: remote, command: "sudo microk8s helm install sonar /tmp/sonarqube && sudo microk8s helm ls"
-                    // }   
-                    // def sshKeyCredential = credentials('jenkins')
                     env.EC2_PUBLIC_IP="54.211.110.252"
                     sshagent(credentials: ['jenkins']) {
                         sh "scp -o StrictHostKeyChecking=no  -r sonarqube ubuntu@${env.EC2_PUBLIC_IP}:/tmp"
