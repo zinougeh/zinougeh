@@ -50,7 +50,7 @@ pipeline {
                         sh 'ls'
 
                         ansiblePlaybook(
-                            credentialsId: 'jenkins'
+                            credentialsId: 'jenkins',
                             inventory: 'temp_inventory.ini',
                             playbook: 'ansible.yml',
                             hostKeyChecking: false
