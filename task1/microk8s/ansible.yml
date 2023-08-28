@@ -14,7 +14,7 @@
         sudo usermod -a -G microk8s ubuntu
         sudo chown -R ubuntu ~/.kube
 
-        sudo newgrp microk8s
+        newgrp microk8s
 
         # cd $HOME
         # mkdir .kube
