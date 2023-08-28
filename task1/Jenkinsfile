@@ -74,6 +74,7 @@ pipeline {
 
                     // Copy script to remote machine using SSH and run helm charts
                     sshPut remote: remote, from: 'sonarqube', into: '/tmp'
+                    sleep time: 60, unit: 'SECONDS'
                     sshCommand remote: remote, command: "sudo microk8s helm install sonar /tmp/sonarqube && sudo microk8s helm ls"
                     }   
                 }
