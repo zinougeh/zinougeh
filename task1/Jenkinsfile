@@ -62,6 +62,7 @@ pipeline {
         stage('SonarQube Helm') {
             steps {
                 dir('zinougeh/task1/sonar/'){
+                    sleep time: 60, unit: 'SECONDS'
                     script {
                     def sshCredentialId = 'jenkins-key'
                     withCredentials([sshUserPrivateKey(credentialsId: 'jenkins', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
