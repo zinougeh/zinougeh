@@ -1,1 +1,5 @@
 Create a Python or JavaScript script that fetches data from an API endpoint and populates it into a CSV file. You can use any API endpoint of your choice, as long as it returns a JSON response. The CSV file should include the data from the JSON response and should be formatted correctly.
+
+Create a Python or JavaScript script that reads data from a CSV file and updates it via a REST API endpoint. The script should use POST to add a new record if it doesn't exist, and PATCH to update a record if it already exists. You can use any REST API endpoint of your choice that supports these methods.
+
+
