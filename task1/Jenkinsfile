@@ -62,7 +62,7 @@ pipeline {
         stage('SonarQube Helm') {
             steps {
                 dir('zinougeh/task1/sonar/'){
-                    sleep time: 60, unit: 'SECONDS'
+                    // sleep time: 60, unit: 'SECONDS'
                     script {
                     // def sshCredentialId = 'jenkins-key'
                     // withCredentials([sshUserPrivateKey(credentialsId: 'jenkins', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
@@ -80,8 +80,8 @@ pipeline {
                     // def sshKeyCredential = credentials('jenkins')
                     env.EC2_PUBLIC_IP="54.211.110.252"
                     sshagent(credentials: ['jenkins']) {
-                        sh "scp -o StrictHostKeyChecking=no -i ${sshKeyCredential.privateKey}  -r sonarqube ${sshKeyCredential.username}@${env.EC2_PUBLIC_IP}:/tmp"
-                        sh "ssh -o StrictHostKeyChecking=no -i ${sshKeyCredential.privateKey} ${sshKeyCredential.username}@${env.EC2_PUBLIC_IP} 'sudo microk8s helm install sonar /tmp/sonarqube && sudo microk8s helm ls'"
+                        sh "scp -o StrictHostKeyChecking=no  -r sonarqube ubuntu@${env.EC2_PUBLIC_IP}:/tmp"
+                        sh "ssh -o StrictHostKeyChecking=no  ubuntu@${env.EC2_PUBLIC_IP} 'sudo microk8s helm install sonar /tmp/sonarqube && sudo microk8s helm ls'"
                     }
 
                 }
