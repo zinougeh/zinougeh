@@ -70,6 +70,7 @@ pipeline {
                         credentialsId: sshCredentialId,
                         name: 'ubuntu',
                         user: 'ubuntu',
+                        allowAnyHosts: 'true'
                         host: env.EC2_PUBLIC_IP
                     ], command: "scp -r sonarqube ubuntu@${EC2_PUBLIC_IP}:/tmp"
 
@@ -78,6 +79,7 @@ pipeline {
                         credentialsId: sshCredentialId,
                         name: 'ubuntu',
                         user: 'ubuntu',
+                        allowAnyHosts: 'true'
                         host: env.EC2_PUBLIC_IP
                     ], command: "sudo microk8s helm install sonar /tmp/sonarqube && sudo microk8s helm ls"
                     }
