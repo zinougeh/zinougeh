@@ -59,5 +59,12 @@ pipeline {
             }
         }
     }
-}
+        stage('SonarQube Helm') {
+            steps {
+                dir('zinougeh/task1/sonar/'){
+                    sh 'microk8s helm install sonarqube ./sonarqube'
+                    sh 'microk8s helm ls'
+                }
+        }
+    }
 }
