@@ -65,20 +65,21 @@ pipeline {
                     sleep time: 60, unit: 'SECONDS'
                     script {
                     def sshCredentialId = 'jenkins-key'
-                    withCredentials([sshUserPrivateKey(credentialsId: 'jenkins', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
-                    def remote = [:]
-                    remote.name = "ubuntu"
-                    remote.user = "ubuntu"
-                    remote.host = env.EC2_PUBLIC_IP
-                    remote.allowAnyHosts = true
+                    // withCredentials([sshUserPrivateKey(credentialsId: 'jenkins', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
+                    // def remote = [:]
+                    // remote.name = "ubuntu"
+                    // remote.user = "ubuntu"
+                    // remote.host = env.EC2_PUBLIC_IP
+                    // remote.allowAnyHosts = true
 
-                    // Copy script to remote machine using SSH and run helm charts
-                    sshPut remote: remote, from: 'sonarqube', into: '/tmp'
-                    sleep time: 30, unit: 'SECONDS'
-                    // sshCommand remote: remote, command: "sudo microk8s helm install sonar /tmp/sonarqube && sudo microk8s helm ls"
-                    }   
+                    // // Copy script to remote machine using SSH and run helm charts
+                    // sshPut remote: remote, from: 'sonarqube', into: '/tmp'
+                    // sleep time: 30, unit: 'SECONDS'
+                    // // sshCommand remote: remote, command: "sudo microk8s helm install sonar /tmp/sonarqube && sudo microk8s helm ls"
+                    // }   
                     def sshKeyCredential = credentials('jenkins')
                     sshagent(credentials: [sshKeyCredential]) {
+                        sh "scp -i ${sshKeyCredential.privateKey}  -r sonarqube ${sshKeyCredential.username}@${env.EC2_PUBLIC_IP}:/tmp"
                         sh "ssh -i ${sshKeyCredential.privateKey} ${sshKeyCredential.username}@${env.EC2_PUBLIC_IP} 'sudo microk8s helm install sonar /tmp/sonarqube && sudo microk8s helm ls'"
                     }
 
