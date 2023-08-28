@@ -70,16 +70,16 @@ pipeline {
                     // Copy script to remote machine using SSH
                     sshPut remote: [
                         identityFile: identity,
-                        name: 'ubuntu',
+                        // name: 'ubuntu',
                         user: 'ubuntu',
                         allowAnyHosts: 'true',
                         host: env.EC2_PUBLIC_IP
                     ], from: 'sonarqube', into: '/tmp'
-
-                    // Execute the script on the remote machine
+                    }
+                    withCredentials([sshUserPrivateKey(credentialsId: 'jenkins', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
                     sshCommand remote: [
                         identityFile: identity,
-                        name: 'ubuntu',
+                        // name: 'ubuntu',
                         user: 'ubuntu',
                         allowAnyHosts: 'true',
                         host: env.EC2_PUBLIC_IP
